@@ -113,6 +113,13 @@ struct PaymentEntryView: View {
                             }
                         }
                         .pickerStyle(.menu)
+                        .onChange(of: selectedCurrency) { oldValue, newValue in
+                            if newValue != .gel && !company.isEmpty {
+                                fetchExchangeRate()
+                            } else if newValue == .gel {
+                                exchangeRate = "1.0"
+                            }
+                        }
                         .frame(height: 32)
                         .frame(minWidth: 120)
                     }
@@ -127,6 +134,11 @@ struct PaymentEntryView: View {
                     DatePicker("", selection: $selectedDate, displayedComponents: .date)
                         .datePickerStyle(.field)
                         .frame(height: 32)
+                        .onChange(of: selectedDate) { oldValue, newValue in
+                            if selectedCurrency != .gel && !company.isEmpty {
+                                fetchExchangeRate()
+                            }
+                        }
                 }
             }
         }
