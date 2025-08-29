@@ -17,6 +17,7 @@ struct DashboardView: View {
     @Query private var payments: [Payment]
     
     @State private var selectedYear = Calendar.current.component(.year, from: Date())
+    @State private var showingClearDatabaseAlert = false
     
     var body: some View {
         ScrollView {
@@ -31,6 +32,8 @@ struct DashboardView: View {
                 
                 quickStatsCard
                 
+                databaseManagementCard
+                
                 Spacer(minLength: 20)
             }
             .padding(24)
@@ -39,6 +42,14 @@ struct DashboardView: View {
         .navigationTitle("Tax Dashboard")
         .refreshable {
             // Refresh data if needed
+        }
+        .alert("Clear All Data", isPresented: $showingClearDatabaseAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Clear All Data", role: .destructive) {
+                clearAllData()
+            }
+        } message: {
+            Text("Are you sure you want to delete ALL payments and data? This action cannot be undone.")
         }
     }
     
@@ -87,7 +98,7 @@ struct DashboardView: View {
                     Text("Monthly Income")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("\(currentSummary?.totalIncomeGEL ?? 0, specifier: "%.2f") ₾")
+                    Text("\(formatGELAmount(currentSummary?.totalIncomeGEL ?? 0)) ₾")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
@@ -99,7 +110,7 @@ struct DashboardView: View {
                     Text("Cumulative")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("\(currentSummary?.cumulativeIncomeGEL ?? 0, specifier: "%.2f") ₾")
+                    Text("\(formatGELAmount(currentSummary?.cumulativeIncomeGEL ?? 0)) ₾")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(.green)
@@ -107,12 +118,22 @@ struct DashboardView: View {
             }
             
             if let summary = currentSummary {
-                HStack {
-                    Image(systemName: "doc.text")
-                        .foregroundColor(.orange)
-                    Text("\(summary.paymentCount) payments this month")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Image(systemName: "doc.text")
+                            .foregroundColor(.orange)
+                        Text("\(summary.paymentCount) payments this month")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "percent")
+                            .foregroundColor(.red)
+                        Text("Tax (1%): \(summary.taxAmount, specifier: "%.2f") ₾")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
         }
@@ -203,12 +224,15 @@ struct DashboardView: View {
                             Spacer()
                             
                             VStack(alignment: .trailing, spacing: 4) {
-                                Text("\(summary.totalIncomeGEL, specifier: "%.2f") ₾")
+                                Text("\(formatGELAmount(summary.totalIncomeGEL)) ₾")
                                     .font(.subheadline)
                                     .fontWeight(.semibold)
-                                Text("Total: \(summary.cumulativeIncomeGEL, specifier: "%.2f") ₾")
+                                Text("Total: \(formatGELAmount(summary.cumulativeIncomeGEL)) ₾")
                                     .font(.caption)
                                     .foregroundColor(.green)
+                                Text("Tax: \(summary.taxAmount, specifier: "%.2f") ₾")
+                                    .font(.caption)
+                                    .foregroundColor(.red)
                             }
                         }
                         .padding(.horizontal)
@@ -226,52 +250,166 @@ struct DashboardView: View {
     }
     
     private var quickStatsCard: some View {
-        let totalPayments = payments.count
-        let totalIncomeGEL = payments.reduce(0) { $0 + $1.amountInGEL }
-        let uniqueCompanies = Set(payments.map { $0.company }).count
+        let yearPayments = getYearPayments()
+        let totalPayments = yearPayments.count
+        let totalIncomeGEL = yearPayments.reduce(0) { $0 + $1.amountInGEL }
+        let totalIncomeEUR = yearPayments.filter { $0.currency == .eur }.reduce(0) { $0 + $1.amount }
+        let totalIncomeUSD = yearPayments.filter { $0.currency == .usd }.reduce(0) { $0 + $1.amount }
+        let uniqueCompanies = Set(yearPayments.map { $0.company }).count
         
-        return VStack(alignment: .leading, spacing: 12) {
-            Text("Quick Stats")
-                .font(.headline)
+        return VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text("\(selectedYear, format: .number.grouping(.never)) Year Statistics")
+                    .font(.headline)
+                Spacer()
+            }
             
-            HStack(spacing: 20) {
-                VStack {
-                    Text("\(totalPayments)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.blue)
-                    Text("Total Payments")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+            HStack(spacing: 16) {
+                yearStatColumn(
+                    title: "Total Payments",
+                    value: "\(totalPayments)",
+                    color: .blue
+                )
                 
-                VStack {
-                    Text("\(uniqueCompanies)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.orange)
-                    Text("Companies")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                yearStatColumn(
+                    title: "Companies",
+                    value: "\(uniqueCompanies)",
+                    color: .orange
+                )
                 
-                VStack {
-                    Text("\(totalIncomeGEL, specifier: "%.0f") ₾")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
-                    Text("Total Income")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                yearStatColumn(
+                    title: "Total Income (GEL)",
+                    value: "\(formatGELAmount(totalIncomeGEL)) ₾",
+                    color: .green
+                )
                 
                 Spacer()
+            }
+            
+            if totalIncomeEUR > 0 || totalIncomeUSD > 0 {
+                Divider()
+                
+                Text("Original Currency Totals")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                
+                HStack(spacing: 16) {
+                    if totalIncomeEUR > 0 {
+                        yearStatColumn(
+                            title: "EUR Income",
+                            value: String(format: "%.2f €", totalIncomeEUR),
+                            color: .blue
+                        )
+                    }
+                    
+                    if totalIncomeUSD > 0 {
+                        yearStatColumn(
+                            title: "USD Income", 
+                            value: String(format: "%.2f $", totalIncomeUSD),
+                            color: .green
+                        )
+                    }
+                    
+                    Spacer()
+                }
             }
         }
         .padding(20)
         .background(Color(NSColor.controlBackgroundColor))
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 4)
+    }
+    
+    private var databaseManagementCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "trash.fill")
+                    .foregroundColor(.red)
+                    .font(.title3)
+                Text("Database Management")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                Spacer()
+            }
+            
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Clear all payment data and monthly summaries from the database.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                HStack {
+                    Button("Clear All Data") {
+                        showingClearDatabaseAlert = true
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.regular)
+                    .tint(.red)
+                    
+                    Spacer()
+                }
+            }
+        }
+        .padding(20)
+        .background(Color(NSColor.controlBackgroundColor))
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 4)
+    }
+    
+    private func clearAllData() {
+        do {
+            // Clear all payments
+            let paymentRequest = FetchDescriptor<Payment>()
+            let allPayments = try modelContext.fetch(paymentRequest)
+            for payment in allPayments {
+                modelContext.delete(payment)
+            }
+            
+            // Clear all monthly summaries
+            let summaryRequest = FetchDescriptor<MonthlySummary>()
+            let allSummaries = try modelContext.fetch(summaryRequest)
+            for summary in allSummaries {
+                modelContext.delete(summary)
+            }
+            
+            // Clear all exchange rates
+            let rateRequest = FetchDescriptor<ExchangeRate>()
+            let allRates = try modelContext.fetch(rateRequest)
+            for rate in allRates {
+                modelContext.delete(rate)
+            }
+            
+            // Save the context to persist the deletions
+            try modelContext.save()
+            
+        } catch {
+            print("Error clearing database: \(error)")
+        }
+    }
+    
+    private func getYearPayments() -> [Payment] {
+        payments.filter { payment in
+            let calendar = Calendar.current
+            let paymentYear = calendar.component(.year, from: payment.date)
+            return paymentYear == selectedYear
+        }
+    }
+    
+    private func yearStatColumn(title: String, value: String, color: Color) -> some View {
+        VStack(spacing: 4) {
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(color)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(minWidth: 80)
     }
 }
 

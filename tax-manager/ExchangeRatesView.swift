@@ -474,7 +474,7 @@ struct ExchangeRatesView: View {
                             
                             Spacer()
                             
-                            Text("\(amount * rate, specifier: "%.2f") ₾")
+                            Text("\(formatGELAmount(amount * rate)) ₾")
                                 .font(.title3)
                                 .fontWeight(.bold)
                                 .foregroundColor(.indigo)
@@ -489,7 +489,7 @@ struct ExchangeRatesView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             
-                            Text("\(amount * rate, specifier: "%.2f") ₾")
+                            Text("\(formatGELAmount(amount * rate)) ₾")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             

@@ -234,7 +234,7 @@ struct PaymentEntryView: View {
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                         
-                                        Text("\(amt * rate, specifier: "%.2f") ₾")
+                                        Text("\(formatGELAmount(amt * rate)) ₾")
                                             .font(.subheadline)
                                             .fontWeight(.semibold)
                                             .foregroundColor(.green)

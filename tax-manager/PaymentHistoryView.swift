@@ -371,7 +371,7 @@ struct PaymentRowView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                     
-                    Text("\(payment.amountInGEL, specifier: "%.2f") ₾")
+                    Text("\(formatGELAmount(payment.amountInGEL)) ₾")
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundColor(.green)

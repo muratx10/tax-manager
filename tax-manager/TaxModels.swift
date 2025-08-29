@@ -40,7 +40,7 @@ final class Payment {
         self.currency = currency
         self.date = date
         self.exchangeRate = exchangeRate
-        self.amountInGEL = currency == .gel ? amount : amount * exchangeRate
+        self.amountInGEL = currency == .gel ? amount : ceil(amount * exchangeRate)
         self.createdAt = Date()
     }
 }
@@ -88,4 +88,17 @@ final class MonthlySummary {
         let date = Calendar.current.date(from: DateComponents(year: year, month: month)) ?? Date()
         return formatter.string(from: date)
     }
+    
+    var taxAmount: Double {
+        return totalIncomeGEL * 0.01
+    }
+    
+    var cumulativeTaxAmount: Double {
+        return cumulativeIncomeGEL * 0.01
+    }
+}
+
+// Helper function to format GEL amounts with ceiling
+func formatGELAmount(_ amount: Double) -> String {
+    return String(format: "%.0f", ceil(amount))
 }
