@@ -57,7 +57,7 @@ struct ContentView: View {
                 .foregroundColor(.blue)
             
             Text("Tax management app for Murat")
-                .font(.title2)
+                .font(.title)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
             

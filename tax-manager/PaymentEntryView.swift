@@ -50,11 +50,11 @@ struct PaymentEntryView: View {
                 .foregroundColor(.blue)
             
             Text("Add New Payment")
-                .font(.title2)
+                .font(.largeTitle)
                 .fontWeight(.semibold)
             
             Text("Enter payment details and fetch current exchange rates")
-                .font(.subheadline)
+                .font(.title3)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
         }
@@ -373,24 +373,13 @@ struct PaymentEntryView: View {
                 summary.paymentCount += 1
                 summary.lastUpdated = Date()
             } else {
-                let previousMonth = calendar.date(byAdding: .month, value: -1, to: date) ?? date
-                let prevYear = calendar.component(.year, from: previousMonth)
-                let prevMonthNum = calendar.component(.month, from: previousMonth)
-                
-                let prevRequest = FetchDescriptor<MonthlySummary>(
-                    predicate: #Predicate { summary in
-                        summary.year == prevYear && summary.month == prevMonthNum
-                    }
-                )
-                
-                let previousSummaries = try modelContext.fetch(prevRequest)
-                let previousCumulative = previousSummaries.first?.cumulativeIncomeGEL ?? 0
-                
+                // For new summaries, start with just the month total
+                // The cumulative will be calculated properly in updateCumulativeTotals()
                 let newSummary = MonthlySummary(
                     year: year,
                     month: month,
                     totalIncomeGEL: amount,
-                    cumulativeIncomeGEL: previousCumulative + amount,
+                    cumulativeIncomeGEL: amount, // Temporary value, will be updated
                     paymentCount: 1
                 )
                 
@@ -412,11 +401,22 @@ struct PaymentEntryView: View {
         
         do {
             let summaries = try modelContext.fetch(request)
-            var cumulativeTotal: Double = 0
             
-            for summary in summaries {
-                cumulativeTotal += summary.totalIncomeGEL
-                summary.cumulativeIncomeGEL = cumulativeTotal
+            // Group summaries by year
+            let groupedByYear = Dictionary(grouping: summaries) { $0.year }
+            
+            // Calculate cumulative for each year separately
+            for (_, yearSummaries) in groupedByYear {
+                let sortedYearSummaries = yearSummaries.sorted { 
+                    $0.month < $1.month 
+                }
+                
+                var yearCumulativeTotal: Double = 0
+                
+                for summary in sortedYearSummaries {
+                    yearCumulativeTotal += summary.totalIncomeGEL
+                    summary.cumulativeIncomeGEL = yearCumulativeTotal
+                }
             }
             
         } catch {

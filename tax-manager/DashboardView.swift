@@ -60,11 +60,11 @@ struct DashboardView: View {
                 .foregroundColor(.blue)
             
             Text("Tax Dashboard")
-                .font(.title)
+                .font(.largeTitle)
                 .fontWeight(.bold)
             
             Text("Track your income and tax calculations")
-                .font(.subheadline)
+                .font(.title3)
                 .foregroundColor(.secondary)
         }
         .padding(.bottom, 8)
@@ -80,26 +80,34 @@ struct DashboardView: View {
             summary.year == currentYear && summary.month == currentMonth
         }
         
+        // Calculate actual monthly income from payments for current month
+        let currentMonthPayments = payments.filter { payment in
+            let paymentYear = calendar.component(.year, from: payment.date)
+            let paymentMonth = calendar.component(.month, from: payment.date)
+            return paymentYear == currentYear && paymentMonth == currentMonth
+        }
+        let actualMonthlyIncome = currentMonthPayments.reduce(0) { $0 + $1.amountInGEL }
+        
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "calendar.circle.fill")
                     .foregroundColor(.blue)
                     .font(.title2)
                 Text("Current Month")
-                    .font(.headline)
+                    .font(.title2)
                 Spacer()
                 Text(DateFormatter().monthSymbols[currentMonth - 1])
-                    .font(.subheadline)
+                    .font(.headline)
                     .foregroundColor(.secondary)
             }
             
             HStack {
                 VStack(alignment: .leading) {
                     Text("Monthly Income")
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
-                    Text("\(formatGELAmount(currentSummary?.totalIncomeGEL ?? 0)) ₾")
-                        .font(.title2)
+                    Text("\(formatGELAmount(actualMonthlyIncome)) ₾")
+                        .font(.largeTitle)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
                 }
@@ -108,30 +116,30 @@ struct DashboardView: View {
                 
                 VStack(alignment: .trailing) {
                     Text("Cumulative")
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
                     Text("\(formatGELAmount(currentSummary?.cumulativeIncomeGEL ?? 0)) ₾")
-                        .font(.title2)
+                        .font(.largeTitle)
                         .fontWeight(.semibold)
                         .foregroundColor(.green)
                 }
             }
             
-            if let summary = currentSummary {
+            if !currentMonthPayments.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "doc.text")
                             .foregroundColor(.orange)
-                        Text("\(summary.paymentCount) payments this month")
-                            .font(.caption)
+                        Text("\(currentMonthPayments.count) payments this month")
+                            .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
                     
                     HStack {
                         Image(systemName: "percent")
                             .foregroundColor(.red)
-                        Text("Tax (1%): \(summary.taxAmount, specifier: "%.2f") ₾")
-                            .font(.caption)
+                        Text("Tax (1%): \(actualMonthlyIncome * 0.01, specifier: "%.2f") ₾")
+                            .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -150,7 +158,7 @@ struct DashboardView: View {
         
         return VStack(alignment: .leading) {
             Text("Select Year")
-                .font(.headline)
+                .font(.title2)
                 .padding(.bottom, 8)
             
             if allYears.isEmpty {

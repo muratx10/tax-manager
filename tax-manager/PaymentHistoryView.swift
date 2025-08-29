@@ -58,11 +58,11 @@ struct PaymentHistoryView: View {
                 .foregroundColor(.blue)
             
             Text("Payment History")
-                .font(.title)
+                .font(.largeTitle)
                 .fontWeight(.bold)
             
             Text("View and manage all your payment records")
-                .font(.subheadline)
+                .font(.title3)
                 .foregroundColor(.secondary)
         }
         .padding(.bottom, 8)
@@ -75,7 +75,7 @@ struct PaymentHistoryView: View {
                     .foregroundColor(.blue)
                     .font(.title3)
                 Text("Filters")
-                    .font(.headline)
+                    .font(.title2)
                     .fontWeight(.semibold)
                 Spacer()
             }
@@ -301,9 +301,40 @@ struct PaymentHistoryView: View {
                 }
             }
             
+            updateCumulativeTotals()
             try modelContext.save()
         } catch {
             print("Error updating monthly summary after deletion: \(error)")
+        }
+    }
+    
+    private func updateCumulativeTotals() {
+        let request = FetchDescriptor<MonthlySummary>(
+            sortBy: [SortDescriptor(\.year), SortDescriptor(\.month)]
+        )
+        
+        do {
+            let summaries = try modelContext.fetch(request)
+            
+            // Group summaries by year
+            let groupedByYear = Dictionary(grouping: summaries) { $0.year }
+            
+            // Calculate cumulative for each year separately
+            for (_, yearSummaries) in groupedByYear {
+                let sortedYearSummaries = yearSummaries.sorted { 
+                    $0.month < $1.month 
+                }
+                
+                var yearCumulativeTotal: Double = 0
+                
+                for summary in sortedYearSummaries {
+                    yearCumulativeTotal += summary.totalIncomeGEL
+                    summary.cumulativeIncomeGEL = yearCumulativeTotal
+                }
+            }
+            
+        } catch {
+            print("Failed to update cumulative totals: \(error)")
         }
     }
 }
