@@ -12,7 +12,9 @@ import SwiftData
 struct tax_managerApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Payment.self,
+            ExchangeRate.self,
+            MonthlySummary.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
