@@ -1,5 +1,4 @@
-# Tax Management App for Murat
-
+# Tax Management App
 A comprehensive macOS desktop application built with SwiftUI for managing tax-related payments and income tracking.
 
 ## Features
