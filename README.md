@@ -1,6 +1,6 @@
 # Tax Management App for Murat
 
-A comprehensive macOS desktop application built with SwiftUI for managing tax-related payments and income tracking for Georgian tax residents.
+A comprehensive macOS desktop application built with SwiftUI for managing tax-related payments and income tracking.
 
 ## Features
 
@@ -12,12 +12,12 @@ A comprehensive macOS desktop application built with SwiftUI for managing tax-re
 
 ### 💰 Payment Management
 - **Multi-Currency Support**: EUR, USD, and GEL currencies
-- **Automatic Exchange Rate Conversion**: Real-time rates from National Bank of Georgia
+- **Automatic Exchange Rate Conversion**: Real-time rates from official sources
 - **Payment History**: View, filter, and search all payment records
 - **Delete Functionality**: Remove payments with confirmation dialog
 
 ### 💱 Exchange Rates
-- **Live Rate Fetching**: Integration with NBG (National Bank of Georgia) API
+- **Live Rate Fetching**: Integration with official banking API
 - **Currency Calculator**: Convert between EUR, USD, and GEL
 - **Rate History**: Track exchange rate changes over time
 - **Quick Actions**: Fetch current rates with one click
@@ -39,7 +39,7 @@ A comprehensive macOS desktop application built with SwiftUI for managing tax-re
 - **SwiftUI**: Modern declarative UI framework
 - **SwiftData**: Local data persistence and modeling
 - **Foundation**: Core framework for networking and data handling
-- **URLSession**: HTTP networking for NBG API integration
+- **URLSession**: HTTP networking for banking API integration
 
 ### Data Models
 - **Payment**: Individual payment records with currency conversion
@@ -110,9 +110,9 @@ The app uses SwiftData for local storage:
 
 ## API Integration
 
-### National Bank of Georgia (NBG)
-- **Endpoint**: Official NBG API for exchange rates
-- **Rate Limits**: Respects NBG rate limiting policies
+### Banking API Integration
+- **Endpoint**: Official banking API for exchange rates
+- **Rate Limits**: Respects API rate limiting policies
 - **Error Handling**: Graceful fallback for network issues
 - **Caching**: Rates cached locally to reduce API calls
 
@@ -120,7 +120,7 @@ The app uses SwiftData for local storage:
 
 ### Sandboxing
 - **App Sandbox**: Enabled for security
-- **Network Access**: Limited to NBG API endpoints
+- **Network Access**: Limited to banking API endpoints
 - **File Access**: User-selected files only
 - **Data Protection**: All data stored locally
 
@@ -141,7 +141,7 @@ tax-manager/
 │   ├── PaymentHistoryView.swift   # Payment history & management
 │   ├── ExchangeRatesView.swift    # Exchange rates & calculator
 │   ├── TaxModels.swift           # Data models
-│   ├── ExchangeRateService.swift # NBG API service
+│   ├── ExchangeRateService.swift # Banking API service
 │   └── Assets.xcassets           # App icons & assets
 ├── tax_manager.entitlements      # Security entitlements
 └── README.md                     # This file
@@ -155,7 +155,7 @@ tax-manager/
 
 ### Key Components
 - **Data Layer**: SwiftData models with relationships
-- **Service Layer**: NBG API integration service
+- **Service Layer**: Banking API integration service
 - **UI Layer**: SwiftUI views with bindings
 - **Navigation**: Tab-based navigation system
 
@@ -199,9 +199,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- **National Bank of Georgia**: For providing exchange rate API
+- **Banking Partners**: For providing exchange rate API
 - **Apple**: For SwiftUI and development tools
-- **Georgian Tax Residents**: For inspiration and requirements
+- **Tax Professionals**: For inspiration and requirements
 
 ## Support
 
@@ -217,4 +217,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*Built with ❤️ in Swift for Georgian tax management needs*
+*Built with ❤️ in Swift for professional tax management*
