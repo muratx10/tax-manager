@@ -186,9 +186,15 @@ struct PaymentHistoryView: View {
                             
                             Spacer()
                             
-                            Text("\(monthGroup.value.count) payment\(monthGroup.value.count != 1 ? "s" : "")")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text("\(monthGroup.value.count) payment\(monthGroup.value.count != 1 ? "s" : "")")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text("Total: \(formatGELAmount(monthlyTotal(for: monthGroup.value))) ₾")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.green)
+                            }
                         }
                         .padding(.horizontal, 4)
                         
@@ -233,12 +239,21 @@ struct PaymentHistoryView: View {
     private var filteredPayments: [Payment] {
         var filtered = allPayments
         
-        if selectedMonth > 0 && selectedYear > 0 {
+        // Apply year filter if selected
+        if selectedYear > 0 {
+            filtered = filtered.filter { payment in
+                let calendar = Calendar.current
+                let paymentYear = calendar.component(.year, from: payment.date)
+                return paymentYear == selectedYear
+            }
+        }
+        
+        // Apply month filter if selected
+        if selectedMonth > 0 {
             filtered = filtered.filter { payment in
                 let calendar = Calendar.current
                 let paymentMonth = calendar.component(.month, from: payment.date)
-                let paymentYear = calendar.component(.year, from: payment.date)
-                return paymentMonth == selectedMonth && paymentYear == selectedYear
+                return paymentMonth == selectedMonth
             }
         }
         
@@ -274,6 +289,10 @@ struct PaymentHistoryView: View {
     private var availableYears: [Int] {
         let years = Set(allPayments.map { Calendar.current.component(.year, from: $0.date) })
         return ([0] + Array(years).sorted(by: >))
+    }
+    
+    private func monthlyTotal(for payments: [Payment]) -> Double {
+        return payments.reduce(0) { $0 + $1.amountInGEL }
     }
     
     private func deletePayment(_ payment: Payment) {

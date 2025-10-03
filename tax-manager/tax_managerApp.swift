@@ -15,6 +15,8 @@ struct tax_managerApp: App {
             Payment.self,
             ExchangeRate.self,
             MonthlySummary.self,
+            Debt.self,
+            DebtPayment.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

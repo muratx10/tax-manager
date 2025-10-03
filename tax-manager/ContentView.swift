@@ -23,27 +23,34 @@ struct ContentView: View {
                         Text("Dashboard")
                     }
                     .tag(0)
-                
+
                 PaymentEntryView()
                     .tabItem {
                         Image(systemName: "plus.circle.fill")
                         Text("Add Payment")
                     }
                     .tag(1)
-                
+
                 PaymentHistoryView()
                     .tabItem {
                         Image(systemName: "list.bullet")
                         Text("History")
                     }
                     .tag(2)
-                
+
                 ExchangeRatesView()
                     .tabItem {
                         Image(systemName: "dollarsign.circle")
                         Text("Exchange Rates")
                     }
                     .tag(3)
+
+                DebtsView()
+                    .tabItem {
+                        Image(systemName: "creditcard.and.123")
+                        Text("Debts & Loans")
+                    }
+                    .tag(4)
             }
         }
         .frame(minWidth: 900, minHeight: 650)

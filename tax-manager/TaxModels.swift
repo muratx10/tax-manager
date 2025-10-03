@@ -12,7 +12,7 @@ enum Currency: String, CaseIterable, Codable {
     case eur = "EUR"
     case usd = "USD"
     case gel = "GEL"
-    
+
     var symbol: String {
         switch self {
         case .eur: return "€"

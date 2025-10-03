@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AppKit
 
 struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
@@ -75,11 +76,7 @@ struct DashboardView: View {
         let calendar = Calendar.current
         let currentYear = calendar.component(.year, from: currentDate)
         let currentMonth = calendar.component(.month, from: currentDate)
-        
-        let currentSummary = monthlySummaries.first { summary in
-            summary.year == currentYear && summary.month == currentMonth
-        }
-        
+
         // Calculate actual monthly income from payments for current month
         let currentMonthPayments = payments.filter { payment in
             let paymentYear = calendar.component(.year, from: payment.date)
@@ -87,16 +84,55 @@ struct DashboardView: View {
             return paymentYear == currentYear && paymentMonth == currentMonth
         }
         let actualMonthlyIncome = currentMonthPayments.reduce(0) { $0 + $1.amountInGEL }
+
+        // Calculate year-to-date cumulative for current year
+        let currentYearPayments = payments.filter { payment in
+            let paymentYear = calendar.component(.year, from: payment.date)
+            return paymentYear == currentYear
+        }
+        let yearToDateCumulative = currentYearPayments.reduce(0) { $0 + $1.amountInGEL }
+
+        // If current month has no data, fallback to last month
+        let shouldShowLastMonth = currentMonthPayments.isEmpty
+        var displayYear = currentYear
+        var displayMonth = currentMonth
+        var displayPayments = currentMonthPayments
+        var displayIncome = actualMonthlyIncome
+        var displayCumulative = yearToDateCumulative
+
+        if shouldShowLastMonth {
+            // Calculate last month
+            let lastMonthComponents = calendar.dateInterval(of: .month, for: currentDate)?.start
+                .addingTimeInterval(-1) // Go back one second to get last month
+            if let lastMonthDate = lastMonthComponents {
+                displayYear = calendar.component(.year, from: lastMonthDate)
+                displayMonth = calendar.component(.month, from: lastMonthDate)
+
+                displayPayments = payments.filter { payment in
+                    let paymentYear = calendar.component(.year, from: payment.date)
+                    let paymentMonth = calendar.component(.month, from: payment.date)
+                    return paymentYear == displayYear && paymentMonth == displayMonth
+                }
+                displayIncome = displayPayments.reduce(0) { $0 + $1.amountInGEL }
+
+                // Cumulative for the year of the last month being displayed
+                let lastMonthYearPayments = payments.filter { payment in
+                    let paymentYear = calendar.component(.year, from: payment.date)
+                    return paymentYear == displayYear
+                }
+                displayCumulative = lastMonthYearPayments.reduce(0) { $0 + $1.amountInGEL }
+            }
+        }
         
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "calendar.circle.fill")
                     .foregroundColor(.blue)
                     .font(.title2)
-                Text("Current Month")
+                Text(shouldShowLastMonth ? "Last Month" : "Current Month")
                     .font(.title2)
                 Spacer()
-                Text(DateFormatter().monthSymbols[currentMonth - 1])
+                Text(DateFormatter().monthSymbols[displayMonth - 1])
                     .font(.headline)
                     .foregroundColor(.secondary)
             }
@@ -106,10 +142,20 @@ struct DashboardView: View {
                     Text("Monthly Income")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    Text("\(formatGELAmount(actualMonthlyIncome)) ₾")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
+                    HStack {
+                        Text("\(formatGELAmount(displayIncome)) ₾")
+                            .font(.largeTitle)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        Button(action: {
+                            copyToClipboard(formatGELAmount(displayIncome))
+                        }) {
+                            Image(systemName: "doc.on.doc")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
                 }
                 
                 Spacer()
@@ -118,19 +164,29 @@ struct DashboardView: View {
                     Text("Cumulative")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    Text("\(formatGELAmount(currentSummary?.cumulativeIncomeGEL ?? 0)) ₾")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.green)
+                    HStack {
+                        Text("\(formatGELAmount(displayCumulative)) ₾")
+                            .font(.largeTitle)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.green)
+                        Button(action: {
+                            copyToClipboard(formatGELAmount(displayCumulative))
+                        }) {
+                            Image(systemName: "doc.on.doc")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
                 }
             }
             
-            if !currentMonthPayments.isEmpty {
+            if !displayPayments.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "doc.text")
                             .foregroundColor(.orange)
-                        Text("\(currentMonthPayments.count) payments this month")
+                        Text("\(displayPayments.count) payments \(shouldShowLastMonth ? "last month" : "this month")")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -138,7 +194,7 @@ struct DashboardView: View {
                     HStack {
                         Image(systemName: "percent")
                             .foregroundColor(.red)
-                        Text("Tax (1%): \(actualMonthlyIncome * 0.01, specifier: "%.2f") ₾")
+                        Text("Tax (1%): \(displayIncome * 0.01, specifier: "%.2f") ₾")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -418,6 +474,12 @@ struct DashboardView: View {
                 .multilineTextAlignment(.center)
         }
         .frame(minWidth: 80)
+    }
+    
+    private func copyToClipboard(_ text: String) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
     }
 }
 
