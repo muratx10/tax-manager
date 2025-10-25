@@ -77,7 +77,14 @@ struct ContentView: View {
     }
 
     private var debtsModuleContent: some View {
-        DebtsView()
+        TabView(selection: $selectedTab) {
+            DebtsView()
+                .tabItem {
+                    Image(systemName: "creditcard.fill")
+                    Text("Debts & Loans")
+                }
+                .tag(0)
+        }
     }
     
     private var appTitleHeader: some View {
