@@ -3,6 +3,7 @@ import SwiftUI
 enum AppModule: String, CaseIterable, Identifiable {
     case finance = "Finance"
     case debts = "Debts & Loans"
+    case carMaintenance = "Car Maintenance"
 
     var id: String { rawValue }
 
@@ -12,6 +13,8 @@ enum AppModule: String, CaseIterable, Identifiable {
             return "chart.bar.fill"
         case .debts:
             return "creditcard.fill"
+        case .carMaintenance:
+            return "car.fill"
         }
     }
 
@@ -21,6 +24,8 @@ enum AppModule: String, CaseIterable, Identifiable {
             return "Income, taxes & exchange rates"
         case .debts:
             return "Track debts and loans"
+        case .carMaintenance:
+            return "Vehicle service & maintenance"
         }
     }
 }

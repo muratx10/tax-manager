@@ -17,6 +17,7 @@ struct PersonalManagerApp: App {
             MonthlySummary.self,
             Debt.self,
             DebtPayment.self,
+            MaintenanceRecord.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

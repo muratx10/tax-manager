@@ -39,6 +39,8 @@ struct ContentView: View {
                 financeModuleTabs
             case .debts:
                 debtsModuleContent
+            case .carMaintenance:
+                carMaintenanceModuleContent
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -86,7 +88,39 @@ struct ContentView: View {
                 .tag(0)
         }
     }
-    
+
+    private var carMaintenanceModuleContent: some View {
+        TabView(selection: $selectedTab) {
+            MaintenanceHistoryView()
+                .tabItem {
+                    Image(systemName: "list.bullet")
+                    Text("History")
+                }
+                .tag(0)
+
+            AddMaintenanceView()
+                .tabItem {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add Service")
+                }
+                .tag(1)
+
+            MaintenanceStatsView()
+                .tabItem {
+                    Image(systemName: "chart.bar")
+                    Text("Statistics")
+                }
+                .tag(2)
+
+            MaintenanceRemindersView()
+                .tabItem {
+                    Image(systemName: "bell")
+                    Text("Reminders")
+                }
+                .tag(3)
+        }
+    }
+
     private var appTitleHeader: some View {
         HStack {
             Image(systemName: "square.grid.2x2.fill")
