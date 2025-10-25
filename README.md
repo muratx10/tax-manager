@@ -1,50 +1,90 @@
-# Tax Management App
-A comprehensive macOS desktop application built with SwiftUI for managing tax-related payments and income tracking.
+# Personal Manager
 
-## Features
+A comprehensive macOS desktop application built with SwiftUI for managing personal finances, debts, and vehicle maintenance. Modular design allows easy expansion with new features.
 
-### 📊 Dashboard
-- **Monthly Income Overview**: View current month's income and cumulative totals
-- **Year Selection**: Switch between different tax years
-- **Monthly Breakdown**: Detailed view of income by month
-- **Quick Stats**: Total payments, companies, and income at a glance
+## Overview
 
-### 💰 Payment Management
-- **Multi-Currency Support**: EUR, USD, and GEL currencies
-- **Automatic Exchange Rate Conversion**: Real-time rates from official sources
-- **Payment History**: View, filter, and search all payment records
-- **Delete Functionality**: Remove payments with confirmation dialog
+Personal Manager is a multi-module personal management application with:
+- **Modular Architecture**: Easy-to-navigate sidebar with independent modules
+- **Finance Tracking**: Income, taxes, and multi-currency payments
+- **Debt Management**: Track debts and loans with contacts integration
+- **Vehicle Maintenance**: Car service tracking with reminders
 
-### 💱 Exchange Rates
-- **Live Rate Fetching**: Integration with official banking API
-- **Currency Calculator**: Convert between EUR, USD, and GEL
-- **Rate History**: Track exchange rate changes over time
-- **Quick Actions**: Fetch current rates with one click
+## Modules
 
-### 📱 User Interface
-- **Modern Design**: Professional card-based UI with smooth animations
-- **Dark Mode Support**: Fully adaptive light and dark theme support
-- **Responsive Layout**: Optimized for different screen sizes
-- **Tab Navigation**: Easy access to all features
+### 💰 Finance Module
+Complete financial tracking with tax calculations.
+
+**Features:**
+- **Dashboard**: Monthly/yearly income overview with cumulative totals
+- **Add Payment**: Multi-currency payment entry (EUR, USD, GEL)
+- **Payment History**: Filter by date, search by company
+- **Exchange Rates**: Live rates from banking API with calculator
+
+**Tax Calculation:**
+- Automatic 1% tax computation on income
+- GEL-based tax reporting
+- Monthly and cumulative tracking
+
+### 💳 Debts & Loans Module
+Track money owed and borrowed.
+
+**Features:**
+- **Debt Tracking**: Record debts with type (I Owe / Owes Me)
+- **Payment History**: Track partial payments and settlements
+- **Contacts Integration**: Quick contact selection from macOS Contacts
+- **Status Management**: Pending, Partially Paid, Paid
+- **Multi-Currency**: EUR, USD, GEL, BYN support
+
+### 🚗 Car Maintenance Module
+Vehicle service tracking and expense management.
+
+**Features:**
+- **Service History**: Complete maintenance log with filtering
+- **Add Service**: Log oil changes, tires, brakes, inspections, etc.
+- **Statistics**: Track expenses by service type and month
+- **Reminders**: Mileage and date-based service notifications
+- **USD Only**: All costs tracked in US dollars
+
+**Service Types:**
+- Oil Change
+- Inspection (Technical)
+- Tires
+- Brakes
+- Filters
+- Other
 
 ## Technical Specifications
 
 ### Requirements
 - **macOS**: 14.0 or later
-- **Architecture**: Apple Silicon (arm64) and Intel (x86_64)
-- **Network**: Internet connection required for exchange rate fetching
+- **Architecture**: Universal (Apple Silicon + Intel)
+- **Network**: Internet required for exchange rates
 
 ### Built With
-- **SwiftUI**: Modern declarative UI framework
-- **SwiftData**: Local data persistence and modeling
-- **Foundation**: Core framework for networking and data handling
-- **URLSession**: HTTP networking for banking API integration
+- **SwiftUI**: Modern UI framework
+- **SwiftData**: Local data persistence
+- **Contacts Framework**: macOS contacts integration
+- **Foundation**: Networking and data handling
 
 ### Data Models
-- **Payment**: Individual payment records with currency conversion
-- **ExchangeRate**: Historical exchange rate data
-- **MonthlySummary**: Aggregated monthly income calculations
-- **Currency**: Enum supporting EUR, USD, GEL
+
+**Finance Module:**
+- `Payment`: Payment records with currency conversion
+- `ExchangeRate`: Historical exchange rate data
+- `MonthlySummary`: Monthly aggregated income
+- `Currency`: EUR, USD, GEL
+
+**Debts Module:**
+- `Debt`: Debt/loan records with status
+- `DebtPayment`: Payment history entries
+- `DebtCurrency`: EUR, USD, GEL, BYN
+- `DebtType`: I Owe, Owes Me
+- `DebtStatus`: Pending, Partially Paid, Paid
+
+**Car Maintenance Module:**
+- `MaintenanceRecord`: Service records with mileage
+- `MaintenanceType`: Oil, Tires, Brakes, Inspection, etc.
 
 ## Installation
 
@@ -62,158 +102,179 @@ A comprehensive macOS desktop application built with SwiftUI for managing tax-re
 
 3. Build and run:
    - Select the `tax-manager` scheme
-   - Choose your target device/simulator
    - Press `Cmd+R` to build and run
-
-### App Store (Future)
-*Distribution through Mac App Store is planned for future releases.*
 
 ## Usage
 
-### Adding Payments
-1. Navigate to the **"Add Payment"** tab
-2. Fill in payment details:
-   - Company name
-   - Payment amount
-   - Currency (EUR/USD/GEL)
-   - Payment date
-3. The app automatically fetches current exchange rates
-4. Click **"Add Payment"** to save
+### Finance Module
 
-### Viewing Payment History
-1. Go to the **"History"** tab
-2. Use filters to narrow down results:
-   - Filter by month and year
-   - Search by company name
-3. Delete payments using the trash icon with confirmation
+**Adding Payments:**
+1. Select Finance module from sidebar
+2. Go to "Add Payment" tab
+3. Enter company, amount, currency, and date
+4. Exchange rate fetched automatically
+5. Save to record payment
 
-### Checking Exchange Rates
-1. Open the **"Exchange Rates"** tab
-2. View current live rates from NBG
-3. Use the calculator to convert amounts
-4. Browse historical rate data
+**Viewing Dashboard:**
+- Current month income and tax
+- Year-to-date cumulative totals
+- Monthly breakdown with charts
+- Quick statistics
 
-### Dashboard Overview
-1. The **"Dashboard"** tab provides:
-   - Current month income summary
-   - Year-over-year comparisons
-   - Payment statistics
-   - Monthly breakdowns
+### Debts Module
+
+**Adding Debts:**
+1. Select Debts & Loans module
+2. Click "Add New" button
+3. Choose contact or enter name manually
+4. Set debt type (I Owe / Owes Me)
+5. Enter amount, currency, and notes
+6. Set due date (optional)
+
+**Recording Payments:**
+- Click on debt to view details
+- Add payment entries
+- Track status automatically updates
+- View complete payment history
+
+### Car Maintenance Module
+
+**Logging Service:**
+1. Select Car Maintenance module
+2. Go to "Add Service" tab
+3. Choose service type
+4. Enter date, mileage, and cost (USD)
+5. Add notes (optional)
+6. Set next service reminder
+
+**Viewing Statistics:**
+- Total expenses (all-time)
+- Cost breakdown by service type
+- Monthly expense analysis
+- Year selector for historical data
+
+**Service Reminders:**
+- Enter current mileage
+- View upcoming services
+- Color-coded status indicators
+- Overdue notifications
 
 ## Data Persistence
 
-The app uses SwiftData for local storage:
-- **Automatic Backup**: Data is backed up via iCloud (if enabled)
-- **Local Storage**: All data stored locally on device
-- **No Cloud Dependency**: Works offline except for exchange rate updates
+- **SwiftData**: All data stored locally
+- **iCloud Backup**: Automatic if enabled
+- **No Cloud Dependency**: Works fully offline (except exchange rates)
+- **Data Isolation**: Each module's data is independent
 
 ## API Integration
 
-### Banking API Integration
-- **Endpoint**: Official banking API for exchange rates
-- **Rate Limits**: Respects API rate limiting policies
-- **Error Handling**: Graceful fallback for network issues
-- **Caching**: Rates cached locally to reduce API calls
+### Banking API
+- **Exchange Rates**: Real-time currency conversion
+- **Caching**: Local rate storage to reduce calls
+- **Error Handling**: Graceful fallback on network issues
 
-## Security & Privacy
+## Project Structure
 
-### Sandboxing
-- **App Sandbox**: Enabled for security
-- **Network Access**: Limited to banking API endpoints
-- **File Access**: User-selected files only
-- **Data Protection**: All data stored locally
-
-### Entitlements
-- `com.apple.security.app-sandbox`: ✅ Enabled
-- `com.apple.security.network.client`: ✅ Enabled
-- `com.apple.security.files.user-selected.read-only`: ✅ Enabled
-
-## Development
-
-### Project Structure
 ```
 tax-manager/
 ├── tax-manager/
-│   ├── ContentView.swift          # Main app interface
-│   ├── DashboardView.swift        # Dashboard tab
-│   ├── PaymentEntryView.swift     # Payment entry form
-│   ├── PaymentHistoryView.swift   # Payment history & management
-│   ├── ExchangeRatesView.swift    # Exchange rates & calculator
-│   ├── TaxModels.swift           # Data models
-│   ├── ExchangeRateService.swift # Banking API service
-│   └── Assets.xcassets           # App icons & assets
-├── tax_manager.entitlements      # Security entitlements
-└── README.md                     # This file
+│   ├── PersonalManagerApp.swift      # App entry point
+│   ├── Module.swift                  # Module definitions
+│   ├── ModuleSidebar.swift          # Navigation sidebar
+│   ├── ContentView.swift            # Main container
+│   │
+│   ├── Finance Module/
+│   │   ├── DashboardView.swift
+│   │   ├── PaymentEntryView.swift
+│   │   ├── PaymentHistoryView.swift
+│   │   ├── ExchangeRatesView.swift
+│   │   ├── TaxModels.swift
+│   │   └── ExchangeRateService.swift
+│   │
+│   ├── Debts Module/
+│   │   ├── DebtsView.swift
+│   │   └── DebtModels.swift
+│   │
+│   ├── Car Maintenance Module/
+│   │   ├── MaintenanceHistoryView.swift
+│   │   ├── AddMaintenanceView.swift
+│   │   ├── MaintenanceStatsView.swift
+│   │   ├── MaintenanceRemindersView.swift
+│   │   └── CarMaintenanceModels.swift
+│   │
+│   └── Assets.xcassets
+└── README.md
 ```
 
-### Architecture
-- **MVVM Pattern**: Model-View-ViewModel architecture
-- **SwiftUI Views**: Declarative UI components
-- **Combine Framework**: Reactive programming for data flow
-- **Async/Await**: Modern concurrency for API calls
+## Architecture
+
+### Modular Design
+- **Independent Modules**: Each module is self-contained
+- **Easy Expansion**: Add new modules by extending `AppModule` enum
+- **Sidebar Navigation**: Consistent navigation across modules
+- **Module Persistence**: Last selected module is remembered
+
+### MVVM Pattern
+- **Models**: SwiftData models for persistence
+- **Views**: SwiftUI declarative components
+- **ViewModels**: ObservableObject for state management
 
 ### Key Components
-- **Data Layer**: SwiftData models with relationships
-- **Service Layer**: Banking API integration service
+- **Module System**: Enum-based module definitions
+- **Data Layer**: SwiftData with relationships
+- **Service Layer**: API integration services
 - **UI Layer**: SwiftUI views with bindings
-- **Navigation**: Tab-based navigation system
 
-## Contributing
+## Security & Privacy
 
-### Development Setup
-1. Install Xcode 15.0 or later
-2. Clone the repository
-3. Open project in Xcode
-4. Build and run on macOS 14.0+
+### Permissions Required
+- **Network Access**: For exchange rate API
+- **Contacts**: Optional, for debt management
 
-### Code Style
-- Follow Swift API Design Guidelines
-- Use SwiftUI best practices
-- Maintain consistent naming conventions
-- Add documentation for public APIs
-
-### Testing
-- Unit tests for business logic
-- UI tests for critical user flows
-- Performance tests for data operations
-- Network mocking for API tests
+### Data Privacy
+- **Local Storage**: All data stays on device
+- **No Telemetry**: Zero data collection
+- **Sandboxed**: Full macOS app sandboxing
 
 ## Roadmap
 
 ### Planned Features
-- [ ] **Payment Editing**: Modify existing payment records
-- [ ] **Export Functionality**: Export data to PDF/Excel
-- [ ] **Tax Calculations**: Automatic tax computation
-- [ ] **Backup/Restore**: Manual backup options
-- [ ] **Multiple Users**: Support for multiple tax profiles
+- [ ] **Export**: PDF/Excel export for all modules
+- [ ] **Backup/Restore**: Manual data export/import
+- [ ] **Fuel Tracking**: Gas mileage and cost tracking
+- [ ] **Multiple Vehicles**: Support for multiple cars
+- [ ] **Task Manager**: Personal task tracking module
+- [ ] **Notes Module**: Quick notes and reminders
 
 ### Known Issues
-- Exchange rate fetching requires internet connectivity
+- Exchange rates require internet connection
 - Large datasets may impact performance
-- Date picker styling needs refinement
+
+## Contributing
+
+### Development Setup
+1. Install Xcode 15.0+
+2. Clone repository
+3. Open in Xcode
+4. Build and run
+
+### Code Style
+- Swift API Design Guidelines
+- SwiftUI best practices
+- Clear naming conventions
+- Inline documentation
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see LICENSE file for details.
 
-## Acknowledgments
+## Contact
 
-- **Banking Partners**: For providing exchange rate API
-- **Apple**: For SwiftUI and development tools
-- **Tax Professionals**: For inspiration and requirements
-
-## Support
-
-### Getting Help
-- **Issues**: Report bugs via GitHub Issues
-- **Documentation**: Refer to inline code documentation
-- **Community**: Join discussions in project discussions
-
-### Contact
 - **Developer**: Murat AKMAMEDAU
-- **Created**: August 29, 2025
-- **Version**: 1.0.0
+- **Created**: August 2025
+- **Updated**: October 2025
+- **Version**: 2.0.0
 
 ---
 
-*Built with ❤️ in Swift for professional tax management*
+*Multi-module personal management for macOS*
