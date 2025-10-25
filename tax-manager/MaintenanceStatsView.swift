@@ -56,16 +56,7 @@ struct MaintenanceStatsView: View {
 
     private var totalCostCard: some View {
         let totalCost = allRecords.reduce(0.0) { total, record in
-            let costInGEL: Double
-            switch record.currency {
-            case .gel:
-                costInGEL = record.cost
-            case .eur:
-                costInGEL = record.cost * 3.0
-            case .usd:
-                costInGEL = record.cost * 2.8
-            }
-            return total + costInGEL
+            return total + record.cost
         }
 
         return VStack(spacing: 16) {
@@ -80,7 +71,7 @@ struct MaintenanceStatsView: View {
             }
 
             VStack(spacing: 8) {
-                Text("₾\(String(format: "%.2f", totalCost))")
+                Text("$\(String(format: "%.2f", totalCost))")
                     .font(.system(size: 48, weight: .bold))
                     .foregroundColor(.primary)
 
@@ -135,16 +126,7 @@ struct MaintenanceStatsView: View {
         let costByType = Dictionary(grouping: yearRecords, by: { $0.type })
             .mapValues { records in
                 records.reduce(0.0) { total, record in
-                    let costInGEL: Double
-                    switch record.currency {
-                    case .gel:
-                        costInGEL = record.cost
-                    case .eur:
-                        costInGEL = record.cost * 3.0
-                    case .usd:
-                        costInGEL = record.cost * 2.8
-                    }
-                    return total + costInGEL
+                    return total + record.cost
                 }
             }
             .sorted { $0.value > $1.value }
@@ -173,7 +155,7 @@ struct MaintenanceStatsView: View {
 
                         Spacer()
 
-                        Text("₾\(String(format: "%.2f", cost))")
+                        Text("$\(String(format: "%.2f", cost))")
                             .font(.headline)
                     }
                     .padding(.vertical, 8)
@@ -195,16 +177,7 @@ struct MaintenanceStatsView: View {
         }
         .mapValues { records in
             records.reduce(0.0) { total, record in
-                let costInGEL: Double
-                switch record.currency {
-                case .gel:
-                    costInGEL = record.cost
-                case .eur:
-                    costInGEL = record.cost * 3.0
-                case .usd:
-                    costInGEL = record.cost * 2.8
-                }
-                return total + costInGEL
+                return total + record.cost
             }
         }
         .sorted { $0.key < $1.key }
@@ -236,7 +209,7 @@ struct MaintenanceStatsView: View {
 
                         Spacer()
 
-                        Text("₾\(String(format: "%.2f", cost))")
+                        Text("$\(String(format: "%.2f", cost))")
                             .font(.headline)
                     }
                     .padding(.vertical, 8)

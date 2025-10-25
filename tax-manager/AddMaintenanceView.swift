@@ -14,7 +14,6 @@ struct AddMaintenanceView: View {
     @State private var selectedDate = Date()
     @State private var mileage = ""
     @State private var cost = ""
-    @State private var selectedCurrency: Currency = .gel
     @State private var notes = ""
     @State private var nextServiceMileage = ""
     @State private var nextServiceDate: Date?
@@ -114,35 +113,20 @@ struct AddMaintenanceView: View {
                     }
                 }
 
-                HStack(spacing: 16) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Cost")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.primary)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Cost (USD)")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
+
+                    HStack(spacing: 8) {
+                        Text("$")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
 
                         TextField("0.00", text: $cost)
                             .textFieldStyle(.roundedBorder)
                             .frame(height: 32)
-                    }
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Currency")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.primary)
-
-                        Picker("Currency", selection: $selectedCurrency) {
-                            ForEach(Currency.allCases, id: \.self) { currency in
-                                HStack {
-                                    Text(currency.symbol)
-                                        .fontWeight(.semibold)
-                                    Text(currency.rawValue)
-                                }
-                                .tag(currency)
-                            }
-                        }
-                        .pickerStyle(.menu)
                     }
                 }
 
@@ -246,7 +230,6 @@ struct AddMaintenanceView: View {
             mileage: mileageInt,
             type: selectedType,
             cost: costDouble,
-            currency: selectedCurrency,
             notes: notes,
             nextServiceMileage: nextMileage,
             nextServiceDate: nextDate

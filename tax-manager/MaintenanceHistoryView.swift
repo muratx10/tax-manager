@@ -212,7 +212,7 @@ struct MaintenanceRecordRow: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 4) {
-                Text("\(record.currency.symbol)\(String(format: "%.2f", record.cost))")
+                Text("$\(String(format: "%.2f", record.cost))")
                     .font(.headline)
                     .foregroundColor(.primary)
 

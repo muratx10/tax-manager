@@ -41,19 +41,17 @@ final class MaintenanceRecord {
     var mileage: Int
     var type: MaintenanceType
     var cost: Double
-    var currency: Currency
     var notes: String
     var nextServiceMileage: Int?
     var nextServiceDate: Date?
     var createdAt: Date
 
-    init(date: Date, mileage: Int, type: MaintenanceType, cost: Double, currency: Currency, notes: String = "", nextServiceMileage: Int? = nil, nextServiceDate: Date? = nil) {
+    init(date: Date, mileage: Int, type: MaintenanceType, cost: Double, notes: String = "", nextServiceMileage: Int? = nil, nextServiceDate: Date? = nil) {
         self.id = UUID()
         self.date = date
         self.mileage = mileage
         self.type = type
         self.cost = cost
-        self.currency = currency
         self.notes = notes
         self.nextServiceMileage = nextServiceMileage
         self.nextServiceDate = nextServiceDate
