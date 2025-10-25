@@ -10,64 +10,83 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @StateObject private var moduleManager = ModuleManager()
     @State private var selectedTab = 0
-    
+
     var body: some View {
         VStack(spacing: 0) {
             appTitleHeader
-            
-            TabView(selection: $selectedTab) {
-                DashboardView()
-                    .tabItem {
-                        Image(systemName: "chart.bar.fill")
-                        Text("Dashboard")
-                    }
-                    .tag(0)
 
-                PaymentEntryView()
-                    .tabItem {
-                        Image(systemName: "plus.circle.fill")
-                        Text("Add Payment")
-                    }
-                    .tag(1)
+            HSplitView {
+                ModuleSidebar(moduleManager: moduleManager)
 
-                PaymentHistoryView()
-                    .tabItem {
-                        Image(systemName: "list.bullet")
-                        Text("History")
-                    }
-                    .tag(2)
-
-                ExchangeRatesView()
-                    .tabItem {
-                        Image(systemName: "dollarsign.circle")
-                        Text("Exchange Rates")
-                    }
-                    .tag(3)
-
-                DebtsView()
-                    .tabItem {
-                        Image(systemName: "creditcard.and.123")
-                        Text("Debts & Loans")
-                    }
-                    .tag(4)
+                moduleContent
             }
         }
         .frame(minWidth: 900, minHeight: 650)
         .background(Color(NSColor.windowBackgroundColor))
+        .onChange(of: moduleManager.selectedModule) { _, _ in
+            selectedTab = 0
+        }
+    }
+
+    @ViewBuilder
+    private var moduleContent: some View {
+        switch moduleManager.selectedModule {
+        case .finance:
+            financeModuleTabs
+        case .debts:
+            debtsModuleContent
+        }
+    }
+
+    private var financeModuleTabs: some View {
+        TabView(selection: $selectedTab) {
+            DashboardView()
+                .tabItem {
+                    Image(systemName: "chart.bar.fill")
+                    Text("Dashboard")
+                }
+                .tag(0)
+
+            PaymentEntryView()
+                .tabItem {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add Payment")
+                }
+                .tag(1)
+
+            PaymentHistoryView()
+                .tabItem {
+                    Image(systemName: "list.bullet")
+                    Text("History")
+                }
+                .tag(2)
+
+            ExchangeRatesView()
+                .tabItem {
+                    Image(systemName: "dollarsign.circle")
+                    Text("Exchange Rates")
+                }
+                .tag(3)
+        }
+    }
+
+    private var debtsModuleContent: some View {
+        DebtsView()
     }
     
     private var appTitleHeader: some View {
         HStack {
-            Image(systemName: "doc.text.fill")
+            Image(systemName: "square.grid.2x2.fill")
                 .font(.title2)
                 .foregroundColor(.blue)
-            
-            Text("Tax management app for Murat")
+
+            Text("Personal Manager")
                 .font(.title)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
-            
+
             Spacer()
         }
         .padding(.horizontal, 20)
