@@ -33,14 +33,16 @@ struct ContentView: View {
 
     @ViewBuilder
     private var moduleContent: some View {
-        switch moduleManager.selectedModule {
-        case .finance:
-            financeModuleTabs
-        case .debts:
-            debtsModuleContent
+        Group {
+            switch moduleManager.selectedModule {
+            case .finance:
+                financeModuleTabs
+            case .debts:
+                debtsModuleContent
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
 
     private var financeModuleTabs: some View {
         TabView(selection: $selectedTab) {
