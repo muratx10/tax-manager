@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct tax_managerApp: App {
+struct PersonalManagerApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Payment.self,
@@ -28,7 +28,7 @@ struct tax_managerApp: App {
     }()
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("Personal Manager") {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
