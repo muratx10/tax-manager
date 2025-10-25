@@ -38,7 +38,6 @@ struct PaymentHistoryView: View {
             .frame(maxWidth: .infinity)
         }
         .navigationTitle("Payment History")
-        .searchable(text: $searchText, prompt: "Search companies...")
         .alert("Delete Payment", isPresented: $showingDeleteAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
@@ -86,7 +85,7 @@ struct PaymentHistoryView: View {
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.primary)
-                    
+
                     Picker("Month", selection: $selectedMonth) {
                         Text("All Months").tag(0)
                         ForEach(1...12, id: \.self) { month in
@@ -97,13 +96,13 @@ struct PaymentHistoryView: View {
                     .pickerStyle(.menu)
                     .frame(minWidth: 140)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Year")
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.primary)
-                    
+
                     Picker("Year", selection: $selectedYear) {
                         Text("All Years").tag(0)
                         ForEach(availableYears.filter { $0 != 0 }, id: \.self) { year in
@@ -114,19 +113,31 @@ struct PaymentHistoryView: View {
                     .pickerStyle(.menu)
                     .frame(minWidth: 120)
                 }
-                
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Search")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
+
+                    TextField("Search companies...", text: $searchText)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(minWidth: 180)
+                }
+
                 Spacer()
-                
+
                 VStack(spacing: 8) {
                     Text(" ")
                         .font(.subheadline)
-                    
+
                     Button("Reset Filters") {
                         selectedMonth = 0
                         selectedYear = 0
+                        searchText = ""
                     }
                     .buttonStyle(.borderedProminent)
-                    .disabled(selectedMonth == 0 && selectedYear == 0)
+                    .disabled(selectedMonth == 0 && selectedYear == 0 && searchText.isEmpty)
                 }
             }
             

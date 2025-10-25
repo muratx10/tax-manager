@@ -44,7 +44,6 @@ struct DebtsView: View {
             .frame(maxWidth: .infinity)
         }
         .navigationTitle("Debts & Loans")
-        .searchable(text: $searchText, prompt: "Search by name...")
         .sheet(isPresented: $showingAddDebt) {
             AddDebtView()
         }
@@ -151,7 +150,12 @@ struct DebtsView: View {
                 }
                 .buttonStyle(.plain)
             }
+
             Spacer()
+
+            TextField("Search by name...", text: $searchText)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 220)
         }
         .padding(.horizontal, 4)
     }

@@ -37,7 +37,6 @@ struct MaintenanceHistoryView: View {
             .frame(maxWidth: .infinity)
         }
         .navigationTitle("Maintenance History")
-        .searchable(text: $searchText, prompt: "Search notes...")
         .alert("Delete Record", isPresented: $showingDeleteAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
@@ -79,32 +78,45 @@ struct MaintenanceHistoryView: View {
                 Spacer()
             }
 
-            HStack(spacing: 20) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Service Type")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.primary)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 20) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Service Type")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.primary)
 
-                    Picker("Type", selection: $selectedType) {
-                        Text("All Types").tag(nil as MaintenanceType?)
-                        ForEach(MaintenanceType.allCases, id: \.self) { type in
-                            Label(type.rawValue, systemImage: type.icon)
-                                .tag(type as MaintenanceType?)
+                        Picker("Type", selection: $selectedType) {
+                            Text("All Types").tag(nil as MaintenanceType?)
+                            ForEach(MaintenanceType.allCases, id: \.self) { type in
+                                Label(type.rawValue, systemImage: type.icon)
+                                    .tag(type as MaintenanceType?)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .frame(minWidth: 180)
                     }
-                    .pickerStyle(.menu)
-                    .frame(minWidth: 180)
-                }
 
-                Spacer()
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Search Notes")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.primary)
 
-                if selectedType != nil || !searchText.isEmpty {
-                    Button("Clear Filters") {
-                        selectedType = nil
-                        searchText = ""
+                        TextField("Search...", text: $searchText)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(minWidth: 200)
                     }
-                    .buttonStyle(.bordered)
+
+                    Spacer()
+
+                    if selectedType != nil || !searchText.isEmpty {
+                        Button("Clear Filters") {
+                            selectedType = nil
+                            searchText = ""
+                        }
+                        .buttonStyle(.bordered)
+                    }
                 }
             }
         }
