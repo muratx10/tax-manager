@@ -1,61 +1,61 @@
 {
   "images" : [
     {
-      "filename" : "16-mac.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_16x16x32 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "32-mac.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_32x32x32 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "32-mac 1.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_32x32x32 2.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "64-mac.png",
+      "filename" : "23e.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "128-mac.png",
+      "filename" : "test.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "256-mac.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_256x256x32 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "256-mac 1.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_256x256x32.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "512-mac.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_512x512x32 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "512-mac 1.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_512x512x32.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "1024-mac 1.png",
+      "filename" : "0b7ca518d18f6e20ce3fe6a9a8979397_Thug_Life_Finder_1024x1024x32.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
