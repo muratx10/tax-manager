@@ -407,7 +407,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "muratx10.personal-manager";
+				PRODUCT_BUNDLE_IDENTIFIER = "muratx10.tax-manager";
 				PRODUCT_NAME = "Personal Manager";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -435,7 +435,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "muratx10.personal-manager";
+				PRODUCT_BUNDLE_IDENTIFIER = "muratx10.tax-manager";
 				PRODUCT_NAME = "Personal Manager";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
