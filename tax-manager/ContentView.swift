@@ -22,6 +22,7 @@ struct ContentView: View {
 
                 moduleContent
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(minWidth: 900, minHeight: 650)
         .background(Color(NSColor.windowBackgroundColor))
@@ -39,6 +40,7 @@ struct ContentView: View {
             debtsModuleContent
         }
     }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
 
     private var financeModuleTabs: some View {
         TabView(selection: $selectedTab) {
